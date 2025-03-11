@@ -1,15 +1,13 @@
-package app
+package statisticsApp
 
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"fmt"
 	"github.com/SeeingTheFire/tsg.statistics/internal/database"
 	"github.com/SeeingTheFire/tsg.statistics/internal/database/migration"
+	"github.com/SeeingTheFire/tsg.statistics/internal/services"
 	"github.com/gin-gonic/gin"
-	"github.com/pkg/errors"
-
 	"github.com/go-redis/redis/v8"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -96,18 +94,9 @@ func initRedis() *redis.Client {
 	return client
 }
 
-func initService(dbPool *sql.DB, redisClient *redis.Client, logger *logrus.Logger) {
-	//accountRepository := repository_account.NewAccountRepository(dbPool)
-	//customerRepository := repository_customer.NewCustomerRepository(dbPool)
-	//authRepository := repository_auth.NewAuthRepository(redisClient)
-	//
-	//authUseCase := usecase_auth.NewAuthUseCase(authRepository,
-	//	viper.GetString("security.access_secret"),
-	//	viper.GetInt("security.access_secret_expire_after_minute"),
-	//	viper.GetString("security.refresh_secret"),
-	//	viper.GetInt("security.refresh_secret_expire_after_day"))
-	//accountUseCase := usecase_account.NewAccountUseCase(authUseCase, accountRepository, customerRepository, logger)
-	//customerUseCase := usecase_customer.NewCustomerUseCase(customerRepository, logger)
+func initService(dbPool *sql.DB, redisClient *redis.Client, logger *logrus.Logger) *services.Parser {
+	parser := services.NewParser(nil)
+	return parser
 }
 
 func initHandler(logger *logrus.Logger) {
@@ -117,11 +106,8 @@ func initHandler(logger *logrus.Logger) {
 
 	http.Handle("/", r)
 
-	//delivery_http_account.NewAccountHandler(r, accountUseCase, logger)
-	//delivery_http_customer.NewCustomerHandler(r, customerUseCase, logger)
-
 	srv := &http.Server{
-		Addr:         fmt.Sprintf(`:%d`, viper.GetInt("app.port")),
+		Addr:         fmt.Sprintf(`:%d`, viper.GetInt("parserApp.port")),
 		WriteTimeout: time.Second * 15,
 		ReadTimeout:  time.Second * 15,
 		IdleTimeout:  time.Second * 60,

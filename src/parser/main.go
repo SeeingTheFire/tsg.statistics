@@ -1,14 +1,9 @@
 package main
 
 import (
-	"fmt"
+	"github.com/SeeingTheFire/tsg.statistics/internal/parserApp"
 )
 
 func main() {
-	s := "gopher"
-	fmt.Println("Hello and welcome, %s!", s)
-
-	for i := 1; i <= 5; i++ {
-		fmt.Println("i =", 100/i)
-	}
+	parserApp.Run()
 }
